@@ -37,10 +37,9 @@ while True:
   df["RSI_AD"]=df["RSI_D"].rolling(RSI_n).mean()
   df["RSI"] = df.apply(lambda x:x["RSI_AU"]/(x["RSI_AU"]+ x["RSI_AD"]) * 100,1)
 
-
-  #for ten in range(15,500) :
-  #
-  #   df.loc[ten,'RSI'] = (1-1/14)*df.loc[ten-1,'RSI']+(1/14*df.loc[ten,'RSI'])
+  # 일반 rsi -> 거래소 rsi
+  for ten in range(15,500) :
+    df.loc[ten,'RSI'] = (1-1/14)*df.loc[ten-1,'RSI']+(1/14*df.loc[ten,'RSI'])
 
 
 
@@ -144,12 +143,12 @@ while True:
           break
         if df.loc[now_divergence + q,'RSI'] < most_low_RSI or df.loc[now_divergence +q, 'low'] < most_low_price :
           predictable_profit = ((now_divergence_close - df.loc[now_divergence + q , 'close'])/now_divergence_close)*100
-          #print("$$이득입니다! 예상되는 이득은", predictable_profit, "% 입니다.$$ 현재 다이버전스는 ", now_divergence,"에 위치하고 있습니다.", q,  "번째 다음 이득이 나타납니다." )
+          print("$$이득입니다! 예상되는 이득은", predictable_profit, "% 입니다.$$ 현재 다이버전스는 ", now_divergence,"에 위치하고 있습니다.", q,  "번째 다음 이득이 나타납니다." )
           df.loc[now_divergence + q,'하다 회수구간'] = 'Y'
           break
         if df.loc[now_divergence-1,'high']*1.02 < df.loc [now_divergence+q,'close'] or q == 19:
           predictable_loss = ((now_divergence_close - df.loc[499,'close'])/now_divergence_close)*100
-          #print("손해입니다. 손해금액은",predictable_loss,"입니다.", "위치는", now_divergence + q ,"이며," ,q, "번째 다음 손해가 나타납니다.")
+          print("손해입니다. 손해금액은",predictable_loss,"입니다.", "위치는", now_divergence + q ,"이며," ,q, "번째 다음 손해가 나타납니다.")
           df.loc[now_divergence + q,'하다 회수구간'] = 'Y'
           break
     real_sum += predictable_loss + predictable_profit
@@ -184,12 +183,12 @@ while True:
           break
         if df.loc[now_divergence1 + q1,'RSI'] > most_high_RSI or df.loc[now_divergence1 +q1, 'high'] > most_high_price :
           predictable_profit1 = ((df.loc[now_divergence1 + q1,'close'] - now_divergence_low_close)/now_divergence_low_close)*100
-          #print("$$이득입니다! 예상되는 이득은", predictable_profit1, "% 입니다.$$ 현재 다이버전스는 ", now_divergence1,"에 위치하고 있습니다.", q1,  "번째 다음 이득이 나타납니다." )
+          print("$$이득입니다! 예상되는 이득은", predictable_profit1, "% 입니다.$$ 현재 다이버전스는 ", now_divergence1,"에 위치하고 있습니다.", q1,  "번째 다음 이득이 나타납니다." )
           df.loc[now_divergence1 + q1,'상다 회수구간'] = 'Y'
           break
         if df.loc[now_divergence1-1,'low']*0.98 > df.loc [now_divergence1+q1,'close'] or q1 == 19:
           predictable_loss1 = ((now_divergence_low_close - df.loc[499,'close'])/now_divergence_low_close)*100
-          #print("손해입니다. 손해금액은",predictable_loss1,"입니다.", "위치는", now_divergence1 ,"이며," ,q1, "번째 다음 손해가 나타납니다.")
+          print("손해입니다. 손해금액은",predictable_loss1,"입니다.", "위치는", now_divergence1 ,"이며," ,q1, "번째 다음 손해가 나타납니다.")
           df.loc[now_divergence1 + q1,'상다 회수구간'] = 'Y'
           break
     real_sum1 += predictable_loss1 + predictable_profit1
@@ -306,7 +305,7 @@ while True:
         symbol= what_do_you_want,
         amount= now_amount
         )
-        print(what_do_you_want,"를", now_amount,"만큼 롱포지션능 정리했습니다! 현재시간은", now ,"입니다.")
+        print(what_do_you_want,"를", now_amount,"만큼 롱포지션을 정리했습니다! 현재시간은", now ,"입니다.")
     else :
       print("아직 최대 이득구간에 도달하지 못했습니다.")
 
